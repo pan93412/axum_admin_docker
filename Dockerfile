@@ -4,7 +4,6 @@ WORKDIR /src
 
 # use sparse to speed up the dependencies download process
 ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
-ARG EXECUTABLE_NAME=axum-admin
 
 RUN apt update \
   && apt install mold
@@ -18,7 +17,7 @@ RUN mkdir -p /app/bin \
   # move the files to preserve to /app
   && (cat .zeabur-preserve | xargs -I {} cp -r {} /app/{}) \
   # move the binary to the root of the container
-  && cp target/release/${EXECUTABLE_NAME} /app/bin
+  && cp target/release/* /app/bin
 
 FROM debian:bookworm-slim
 
