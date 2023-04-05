@@ -1,7 +1,3 @@
-// use std::time::Duration;
-
-use std::{net::SocketAddr, str::FromStr};
-
 //
 use app_service::{service_utils, tasks};
 use axum::{
@@ -70,7 +66,7 @@ fn main() {
         // 定时任务初始化
         tasks::timer_task_init().await.expect("定时任务初始化失败");
 
-        let addr = SocketAddr::from_str(&CFG.server.address).unwrap();
+        let addr = CFG.server.address;
         //  跨域
         let cors = CorsLayer::new()
             .allow_methods(vec![Method::GET, Method::POST, Method::PUT, Method::DELETE])

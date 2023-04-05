@@ -1,3 +1,5 @@
+use std::net::SocketAddr;
+
 use serde::Deserialize;
 
 /// 配置文件
@@ -27,8 +29,8 @@ pub struct Server {
     /// 服务器名称
     pub name: String,
     /// 服务器(IP地址:端口)
-    /// `0.0.0.0:3000`
-    pub address: String,
+    #[serde(default = "default_address")]
+    pub address: SocketAddr,
     /// 服务器ssl
     pub ssl: bool,
     /// 响应数据gzip
@@ -39,6 +41,16 @@ pub struct Server {
     pub cache_method: u32,
     /// api 前缀  例如："/api_v1"
     pub api_prefix: String,
+}
+
+fn default_address() -> SocketAddr {
+  let addr = std::env::var("ADDRESS").unwrap_or_else(|_| "0.0.0.0".to_string());
+  let port = std::env::var("PORT").unwrap_or_else(|_| "3000".to_string());
+
+  SocketAddr::new(
+    addr.parse().expect("not a valid IP address"),
+    port.parse().expect("not a valid port")
+  )
 }
 
 /// server 配置文件
