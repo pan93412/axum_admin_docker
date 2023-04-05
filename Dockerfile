@@ -7,7 +7,7 @@ ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
 # the target to compile; musl is for alpine
 # change to aarch64 if target is aarch64
-ENV CARGO_BUILD_TARGET=aarch64-unknown-linux-gnu
+ENV CARGO_BUILD_TARGET=x86_64-unknown-linux-gnu
 
 # hack: find binary path
 # fixme: it is platform-specific hack!
