@@ -17,7 +17,7 @@ RUN mkdir -p /app/bin \
   # move the files to preserve to /app
   && (cat .zeabur-preserve | xargs -I {} cp -r {} /app/{}) \
   # move the binary to the root of the container
-  && cp target/release/* /app/bin
+  && (cp target/release/* /app/bin || true)
 
 FROM debian:bookworm-slim
 
