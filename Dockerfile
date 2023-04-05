@@ -10,13 +10,11 @@ RUN apt update \
 
 COPY . .
 
-RUN mold -run cargo build
-
-# move the files to preserve to /app
-RUN cat .zeabur-preserve | xargs -I {} cp -r {} /app/{}
-
-# move the binary to the root of the container
-RUN mkdir /app && cargo install --root /app --path . --bins
+RUN mkdir /app \
+      # move the files to preserve to /app
+      && (cat .zeabur-preserve | xargs -I {} cp -r {} /app/{}) \
+      # move the binary to the root of the container
+      && mold -run cargo install --root /app --path . --bins
 
 FROM debian:bookworm-slim
 
