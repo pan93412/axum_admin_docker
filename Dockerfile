@@ -30,8 +30,7 @@ RUN apt-get update \
 RUN useradd -m -s /bin/bash zeabur
 USER zeabur
 
+COPY --from=builder /app /app
+
 WORKDIR /app
-
-COPY --from=builder /app/* /app/
-
-CMD ["/app/bin/${EXECUTABLE_NAME}"]
+CMD ["/app/bin/axum-admin"]
