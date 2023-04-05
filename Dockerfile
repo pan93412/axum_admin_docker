@@ -4,7 +4,7 @@ WORKDIR /src
 
 # use sparse to speed up the dependencies download process
 ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
-ARG EXECUTABLE_NAME=axum_admin
+ARG EXECUTABLE_NAME=axum-admin
 
 RUN apt update \
   && apt install mold
@@ -22,7 +22,7 @@ RUN mkdir -p /app/bin \
 
 FROM debian:bookworm-slim
 
-ARG EXECUTABLE_NAME=axum_admin
+ARG EXECUTABLE_NAME=axum-admin
 
 RUN apt-get update \
   && apt-get install -y openssl \
