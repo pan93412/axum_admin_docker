@@ -6,21 +6,21 @@ WORKDIR /src
 ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
 RUN apt update \
-        && apt install mold
+  && apt install mold
 
 COPY . .
 
 RUN mkdir /app \
-      # move the files to preserve to /app
-      && (cat .zeabur-preserve | xargs -I {} cp -r {} /app/{}) \
-      # move the binary to the root of the container
-      && mold -run cargo install --root /app --path . --bins
+  # move the files to preserve to /app
+  && (cat .zeabur-preserve | xargs -I {} cp -r {} /app/{}) \
+  # move the binary to the root of the container
+  && mold -run cargo install --root /app --path .
 
 FROM debian:bookworm-slim
 
 RUN apt-get update \
-        && apt-get install -y openssl \
-        && rm -rf /var/lib/apt/lists/*
+  && apt-get install -y openssl \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN useradd -m -s /bin/bash zeabur
 USER zeabur
