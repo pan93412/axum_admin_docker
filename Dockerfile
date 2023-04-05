@@ -5,24 +5,18 @@ WORKDIR /src
 # use sparse to speed up the dependencies download process
 ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
-# the target to compile; musl is for alpine
-# change to aarch64 if target is aarch64
-ENV CARGO_BUILD_TARGET=x86_64-unknown-linux-gnu
-
-# hack: find binary path
-# fixme: it is platform-specific hack!
-ENV CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUNNER=echo
-ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUNNER=echo
-
 RUN apt update \
-        && apt install mold \
-        && rustup target add $CARGO_BUILD_TARGET
+        && apt install mold
 
 COPY . .
+
 RUN mold -run cargo build
 
+# move the files to preserve to /app
+RUN cat .zeabur-preserve | xargs -I {} cp -r {} /app/{}
+
 # move the binary to the root of the container
-RUN mkdir /app && mv $(cargo run) /app/server
+RUN mkdir /app && cargo install --root /app --path . --bins
 
 FROM debian:bookworm-slim
 
@@ -34,6 +28,7 @@ RUN useradd -m -s /bin/bash zeabur
 USER zeabur
 
 WORKDIR /app
+
 COPY --from=builder /app/* /app/
 
-CMD ["/app/server"]
+CMD ["/app/axum_admin"]
